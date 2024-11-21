@@ -38,7 +38,7 @@ jobs:
           CHANGE_TYPE="MAJOR"
           fi
 
-          echo "CHANGE_TYPE=$CHANGE_TYPE>> $GITHUB_ENV
+          echo "CHANGE_TYPE=$CHANGE_TYPE">> $GITHUB_ENV
 
       - name: Determine new version
         run: |
@@ -58,7 +58,7 @@ jobs:
           
           fi
           NEW_VERSION="v"$MAJOR"."$MINOR"."$PATCH
-          echo "NEW_VERSION=$NEW_VERSION>> $GITHUB_ENV
+          echo "NEW_VERSION=$NEW_VERSION">> $GITHUB_ENV
 
       - name: Create new tag
         run: |
