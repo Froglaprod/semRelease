@@ -61,9 +61,10 @@ jobs:
       - name: Create new tag
         run: |
           if [[ "$NEW_VERSION" != "$LAST_TAG" ]]; then
-          git tag $NEW_VERSION
+            git tag "$NEW_VERSION"
+            echo "$NEW_VERSION a été créé"
           else
-          echo "Aucun tag à été ajouté"
+            echo "Aucun tag n'a été ajouté"
           fi
 
       - name: Show new version
