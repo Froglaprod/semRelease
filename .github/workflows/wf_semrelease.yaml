@@ -64,6 +64,7 @@ jobs:
           git tag $NEW_VERSION
           else
           echo "Aucun tag à été ajouté"
+          fi
 
       - name: Show new version
         run: |
@@ -71,6 +72,7 @@ jobs:
           echo "$NEW_VERSION"
           else
           echo "CE commit n'as pas conduit à un tag."
+          fi
         
           
       
