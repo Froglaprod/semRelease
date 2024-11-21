@@ -1,1 +1,79 @@
+name: SemRelease
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+      - name: Checkout code with Token
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Setup Git
+        run: |
+          git config user.name "user_tag"
+          git config user.email "tag@gmail.com"
+          
+      - name: Get lastest tag
+        run: |
+          git fetch -tags
+          LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
+          echo "LAST_TAG=$LAST_TAG >> $GITHUB_ENV
+          
+      - name: Analyze commit message
+        run: |
+          if [[ "$COMMIT_MSG" == *"fix"* ]]; then
+          CHANGE_TYPE="PATCH"
+          
+          elif [[ "$COMMIT_MSG" == *"feat"* ]]; then
+          CHANGE_TYPE="MINOR"
+          
+          elif [[ "$COMMIT_MSG" == *"breakingChange"* ]]; then
+          CHANGE_TYPE="MAJOR"
+          fi
+
+          echo "CHANGE_TYPE=$CHANGE_TYPE>> $GITHUB_ENV
+
+      - name: Determine new version
+        run: |
+          if [[ "$CHANGE_TYPE" == "MAJOR" ]]; then
+          PATCH=0
+          MINOR=0
+          MAJOR=$"((MAJOR + 1))"
+          
+          elif [[ "$CHANGE_TYPE" == "MINOR" ]]; then
+          PATCH=0
+          MINOR=$"((MINOR + 1))"
+          
+          elif [[ "$CHANGE_TYPE" == "PATCH" ]]; then
+          PATCH=$"((PATCH + 1))"
+
+          else
+          
+          fi
+          NEW_VERSION="v"$MAJOR"."$MINOR"."$PATCH
+          echo "NEW_VERSION=$NEW_VERSION>> $GITHUB_ENV
+
+      - name: Create new tag
+        run: |
+          if [[ "$NEW_VERSION" !== "$LAST_TAG" ]]; then
+          git tag $NEW_VERSION
+          else
+          echo "Aucun tag à été ajouté"
+
+      - name: Show new version
+        run: |
+          if [[ "$NEW_VERSION" == "$NEW_VERSION" ]]; then
+          echo "$NEW_VERSION"
+          else
+          echo "CE commit n'as pas conduit à un tag."
+        
+          
+      
 
