@@ -60,7 +60,7 @@ jobs:
 
       - name: Create new tag
         run: |
-          if [[ "$NEW_VERSION" !== "$LAST_TAG" ]]; then
+          if [[ "$NEW_VERSION" != "$LAST_TAG" ]]; then
           git tag $NEW_VERSION
           else
           echo "Aucun tag à été ajouté"
